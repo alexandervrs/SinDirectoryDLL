@@ -1,0 +1,31 @@
+#include <winver.h>
+#include <winuser.h>
+
+1 24 "application.manifest"
+
+1 VERSIONINFO
+FILEVERSION 3,1,0,0
+PRODUCTVERSION 3,1,0,0
+FILETYPE VFT_APP
+{
+	BLOCK "StringFileInfo"
+	{
+		BLOCK "040904E4"
+		{
+			VALUE "CompanyName", ""
+			VALUE "FileVersion", "3.1.0.0"
+			VALUE "FileDescription", "DLL to access special folders"
+			VALUE "InternalName", ""
+			VALUE "LegalCopyright", "Alexander Vourtsis"
+			VALUE "LegalTrademarks", ""
+			VALUE "OriginalFilename", ""
+			VALUE "ProductName", "Sin Directory DLL"
+			VALUE "ProductVersion", "3.1.0.0"
+		}
+	}
+	BLOCK "VarFileInfo"
+	{
+		VALUE "Translation", 0x0409, 1252
+	}
+}
+
