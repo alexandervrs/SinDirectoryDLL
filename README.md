@@ -2,7 +2,7 @@
 
 An old Directory DLL extension for Game Maker 8 games
 
-SinDirectory DLL accesses special folders in Game Maker 8 & provides a few folder operations
+SinDirectory DLL accesses special folders in Game Maker 8 & provides a few folder operations like Create/Rename/Delete/Check If Exists
 
 Special folders the DLL can return to the game:
 
