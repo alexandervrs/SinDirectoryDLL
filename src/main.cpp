@@ -15,10 +15,57 @@
 #include "main.h"
 #include <windows.h>
 #include <shlobj.h>
+#include <iostream>
+#include <vector>
+
+
+static std::wstring utf8ToUTF16(const std::string &utf8)
+{
+    // Special case of empty input string
+	if (utf8.empty()) {
+		return std::wstring();
+	}
+
+	// Get length (in wchar_t's) of resulting UTF-16 string
+	const int utf16_length = ::MultiByteToWideChar(
+		CP_UTF8,            // convert from UTF-8
+		0,                  // default flags
+		utf8.data(),        // source UTF-8 string
+		utf8.length(),      // length (in chars) of source UTF-8 string
+		NULL,               // unused - no conversion done in this step
+		0                   // request size of destination buffer, in wchar_t's
+	);
+
+	if (utf16_length == 0) {
+		// Error
+		DWORD error = ::GetLastError();
+		throw ;
+	}
+
+
+	// // Allocate properly sized destination buffer for UTF-16 string
+	std::wstring utf16;
+	utf16.resize(utf16_length);
+
+	// // Do the actual conversion from UTF-8 to UTF-16
+	if ( ! ::MultiByteToWideChar(
+		CP_UTF8,            // convert from UTF-8
+		0,                  // default flags
+		utf8.data(),        // source UTF-8 string
+		utf8.length(),      // length (in chars) of source UTF-8 string
+		&utf16[0],          // destination buffer
+		utf16.length()      // size of destination buffer, in wchar_t's
+		) )
+	{
+		DWORD error = ::GetLastError();
+		throw;
+	}
+
+	return utf16;
+}
 
 
 char special_directory_buffer[(MAX_PATH*4)+1];
-
 
 export const char* sin_directory_get_path(double folder_type)
 {
@@ -149,4 +196,66 @@ export const char* sin_directory_get_path(double folder_type)
     special_directory_buffer[buflen] = 0;
 
     return special_directory_buffer;
+}
+
+export double sin_directory_create(char* new_folder)
+{
+	
+	std::string path(new_folder);
+	
+	if (CreateDirectoryW(utf8ToUTF16(path).c_str(), NULL)) {
+		return 1;
+	} else {
+		return 0;
+	}
+	
+}
+
+export double sin_directory_delete(char* folder)
+{
+	
+	std::string path(folder);
+	
+	if (RemoveDirectoryW(utf8ToUTF16(path).c_str())) {
+		return 1;
+	} else {
+		return 0;
+	}
+	
+}
+
+export double sin_directory_rename(char* folder, char* new_folder)
+{
+	
+	std::string path(folder);
+	std::string new_path(new_folder);
+	
+	DWORD attr = GetFileAttributesW(utf8ToUTF16(path).c_str());
+	if ((attr & !FILE_ATTRIBUTE_DIRECTORY)) {
+		return 0;
+	}
+	
+	if (MoveFileW(utf8ToUTF16(path).c_str(), utf8ToUTF16(new_path).c_str())) {
+		return 1;
+	} else {
+		return 0;
+	}
+	
+}
+
+export double sin_directory_exists(char* folder)
+{
+	std::string path(folder);
+	
+	DWORD attr = GetFileAttributesW(utf8ToUTF16(path).c_str());
+	if (attr & FILE_ATTRIBUTE_DIRECTORY) {
+		if (attr == INVALID_FILE_ATTRIBUTES) {
+			return 0;
+		} else {
+			return 1;
+		}
+	} else {
+		return 0;
+	}
+	
 }
