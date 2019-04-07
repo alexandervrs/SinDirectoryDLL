@@ -14,7 +14,7 @@ FILETYPE VFT_APP
 		{
 			VALUE "CompanyName", ""
 			VALUE "FileVersion", "3.2.0.0"
-			VALUE "FileDescription", "DLL to access special folders"
+			VALUE "FileDescription", "DLL to manage folders and access special folders"
 			VALUE "InternalName", ""
 			VALUE "LegalCopyright", "Alexander Vourtsis"
 			VALUE "LegalTrademarks", ""
